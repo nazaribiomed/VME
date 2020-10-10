@@ -1,7 +1,7 @@
 % test-code for VME
 % authors: Mojtaba Nazari and S.Mahmoud Sakhaei
 % mojtaba.nazari.21@gmail.com -- smsakhaei@nit.ac.ir
-
+%
 % M. Nazari, S. M. Sakhaei, Variational Mode Extraction: A New Efficient
 % Method to Derive Respiratory Signals from ECG, IEEE Journal of Biomedical
 % and Health Informatics, Vol. 22, No. 4, pp. 1059-1067, july 2018.
@@ -13,11 +13,15 @@ clear
 clc
 
 %--------------- General Preparation
-alpha = 20000;
+alpha = 20000; % Alpha- compactness of mode constraint
 T = 1000;
+fs=1000;
 t = (1:T)/T;
-tau = 0;
-tol = 1e-7;
+tau = 0; % tau- time-step of the dual ascent.
+tol = 1e-7; % tol- tolerance of convergence criterion
+
+
+
 
 
 %% -------------------------Example 1
@@ -25,7 +29,7 @@ ex1c1=1./(1.2+cos(2*pi*t));
 ex1c2=1./(1.5+sin(2*pi*t));
 ex1c3=cos(32*pi*t+.2*cos(64*pi*t));
 f_ex1=(ex1c1+ex1c2.*ex1c3);%+.2*randn(size(ex1c1));
-omega_init_ex1 =0;
+omega_init_ex1 =0;%initial guess for center frequency (Hz) of desired mode
 % omega_init_ex1=0.002;
 % omega_init_ex1=0.006;
 % omega_init_ex1=0.009;
@@ -36,7 +40,7 @@ ex2c1=2*cos(4*pi*t);
 ex2c2=cos(30*pi*t).*(1+cos(2*pi*t))/2;
 ex2c3=cos(80*pi*t).*(1+sin(2*pi*t))/2;
 f_ex2=ex2c1+ex2c2+ex2c3;%+.2*randn(size(ex2c1));
-omega_init_ex2=.01;
+omega_init_ex2=10;%initial guess for center frequency (Hz) of desired mode
 % omega_init_ex2=0.013;
 % omega_init_ex2=0.016;
 % omega_init_ex2=0.019;
@@ -52,7 +56,7 @@ ex3ac3_2(1:round(length(t)/2))=0;
 ex3ac3_2=ex3ac3_2(501:1000);
 ex3ac3=[ex3ac3_1 ex3ac3_2];
 f_ex3a=ex3ac2+ex3ac3;%+.2*randn(size(ex3ac2));
-omega_init_ex3a=0.006;
+omega_init_ex3a=6;%initial guess for center frequency (Hz) of desired mode
 % omega_init_ex3a=0.009;
 % omega_init_ex3a=0.012;
 % omega_init_ex3a=0.015;
@@ -68,7 +72,7 @@ ex3bc3_2(1:round(length(t)/2))=0;
 ex3bc3_22=ex3bc3_2(501:1000);
 ex3bc3=[ex3bc3_11 ex3bc3_22];
 f_ex3b=ex3bc2+ex3bc3;%+.2*randn(size(ex3bc2));
-omega_init_ex3b=0.026;
+omega_init_ex3b=26;%initial guess for center frequency (Hz) of desired mode
 % omega_init_ex3b=0.029;
 % omega_init_ex3b=0.032;
 % omega_init_ex3b=0.035;
@@ -108,7 +112,7 @@ for i=1:5
             
     end
     
-    u=vme(f,alpha,omega,tau,tol);
+    u=vme(f,alpha,omega,fs,tau,tol);
     
     figure
     plot(t,reference(end,:)./max(reference(end,:)),'r-.')
